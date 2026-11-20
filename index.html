@@ -715,6 +715,72 @@
   .mobile-menu .mob-cta .btn:hover { color: var(--ox3); }
   @media (max-width: 600px) { .mobile-menu { top: 60px; } }
 
+  /* ─── Extra CTAs ────────────────────────────────────────────── */
+  .btn-dark { background: var(--ox); color: var(--ivory); border-color: var(--ox); }
+  .btn-dark:hover { background: var(--ox2); transform: translateY(-2px); box-shadow: 0 10px 24px -10px rgba(90,21,34,.6); }
+  .btn span[aria-hidden] { transition: transform .25s ease; }
+  .btn:hover span[aria-hidden] { transform: translateX(4px); }
+
+  .area-cta {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 22px;
+    font-size: 13px; font-weight: 500; letter-spacing: .03em; color: var(--gold);
+    padding: 10px 0; border-bottom: 1px solid rgba(201,163,107,.35);
+    transition: color .25s, border-color .25s, gap .25s;
+  }
+  .area-cta:hover { color: var(--gold-lt); border-color: var(--gold-lt); gap: 12px; }
+
+  .cta-band { padding: 0; background: var(--ox); position: relative; overflow: hidden; }
+  .cta-band::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(60% 140% at 85% 50%, rgba(201,163,107,.18), transparent 70%);
+  }
+  .cta-band-inner {
+    position: relative; display: flex; align-items: center; justify-content: space-between;
+    gap: 40px; padding: 64px 0;
+  }
+  .cta-band h2 { font-family: var(--serif); font-size: 42px; font-weight: 400; line-height: 1.1; color: var(--ivory); margin: 12px 0 14px; }
+  .cta-band h2 em { color: var(--gold-lt); }
+  .cta-band p { color: rgba(244,237,230,.75); font-size: 16px; max-width: 460px; }
+  .cta-band-actions { display: flex; gap: 12px; flex-wrap: wrap; flex: none; }
+
+  .sobre-cta {
+    margin-top: 48px; padding: 28px 32px; border: 1px solid rgba(90,21,34,.18);
+    border-radius: var(--r-lg); background: rgba(90,21,34,.04);
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  }
+  .sobre-cta p { font-family: var(--serif); font-size: 24px; color: var(--ox3); margin: 0; }
+
+  .contact-quick { display: flex; gap: 10px; margin: 24px 0 8px; flex-wrap: wrap; }
+  .contact-quick .btn { flex: 1; justify-content: center; padding: 13px 18px; }
+
+  .sticky-cta { display: none; }
+
+  @media (max-width: 980px) {
+    .cta-band-inner { flex-direction: column; align-items: flex-start; padding: 52px 0; gap: 28px; }
+    .cta-band h2 { font-size: 34px; }
+    .sobre-cta { flex-direction: column; align-items: flex-start; }
+    .sticky-cta {
+      display: flex; gap: 10px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 58;
+      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+      background: color-mix(in srgb, var(--ox3) 92%, transparent);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--ox-line);
+      transform: translateY(110%); transition: transform .35s ease;
+    }
+    .sticky-cta.show { transform: none; }
+    .sticky-cta .btn { padding: 13px 16px; justify-content: center; }
+    .sticky-cta .btn-solid { flex: 1; }
+    footer { padding-bottom: 76px; }
+  }
+  @media (max-width: 600px) {
+    .cta-band h2 { font-size: 30px; }
+    .cta-band-actions, .cta-band-actions .btn { width: 100%; }
+    .cta-band-actions .btn { justify-content: center; }
+    .sobre-cta { padding: 22px 20px; }
+    .sobre-cta p { font-size: 20px; }
+    .sobre-cta .btn { width: 100%; justify-content: center; }
+  }
+
   /* ─── Responsive — tablet (≤980px) ─────────────────────────── */
   @media (max-width: 980px) {
     .wrap { padding: 0 26px; }
@@ -857,6 +923,11 @@
   </div>
 </div>
 
+<div class="sticky-cta" id="sticky-cta" aria-hidden="true">
+  <a href="tel:+351252001291" class="btn btn-ghost" tabindex="-1">Ligar</a>
+  <a href="#contacto" class="btn btn-solid" tabindex="-1">Agendar consulta</a>
+</div>
+
 <main id="top">
 
   <!-- ═══════════════ HERO ═══════════════ -->
@@ -914,21 +985,25 @@ desde março de 2005</div>
           <div class="area-num">01</div>
           <h3>Direito da Família</h3>
           <p>Divórcios, regulação das responsabilidades parentais, partilhas de bens, uniões de facto, pensões de alimentos e todos os processos que envolvem o núcleo familiar — sempre com discrição e sensibilidade.</p>
+          <a href="#contacto" class="area-cta" data-area="Direito da Família">Falar sobre este tema <span aria-hidden="true">→</span></a>
         </div>
         <div class="area-card reveal">
           <div class="area-num">02</div>
           <h3>Direito Penal</h3>
           <p>Defesa e representação em processo-crime, assistência a arguidos e a ofendidos em todas as fases do processo penal, com estratégia rigorosa e comunicação transparente.</p>
+          <a href="#contacto" class="area-cta" data-area="Direito Penal">Falar sobre este tema <span aria-hidden="true">→</span></a>
         </div>
         <div class="area-card reveal">
           <div class="area-num">03</div>
           <h3>Direito de Menores</h3>
           <p>Promoção e proteção de crianças e jovens em risco, regulação de responsabilidades parentais e processos tutelares educativos, sempre centrados no superior interesse do menor.</p>
+          <a href="#contacto" class="area-cta" data-area="Direito de Menores">Falar sobre este tema <span aria-hidden="true">→</span></a>
         </div>
         <div class="area-card reveal">
           <div class="area-num">04</div>
           <h3>Direito Civil</h3>
           <p>Contratos, responsabilidade civil, obrigações, heranças, sucessões e preparação de documentos jurídicos diversos para particulares e empresas.</p>
+          <a href="#contacto" class="area-cta" data-area="Direito Civil">Falar sobre este tema <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </div>
@@ -1011,7 +1086,10 @@ desde março de 2005</div>
         </div>
       </div>
 
-
+      <div class="sobre-cta reveal">
+        <p>Quer perceber como posso ajudar no seu caso?</p>
+        <a href="#contacto" class="btn btn-dark">Marcar consulta <span aria-hidden="true">→</span></a>
+      </div>
 
     </div>
   </section>
@@ -1053,6 +1131,23 @@ Estes são os quatro momentos do nosso trabalho conjunto.</p>
     </div>
   </section>
 
+  <!-- ═══════════════ CTA BANNER ═══════════════ -->
+  <section class="cta-band">
+    <div class="wrap">
+      <div class="cta-band-inner reveal">
+        <div>
+          <span class="eyebrow">Primeiro passo</span>
+          <h2>Precisa de aconselhamento <em>jurídico</em>?</h2>
+          <p>Marque uma consulta e perceba, sem compromisso, quais são as suas opções.</p>
+        </div>
+        <div class="cta-band-actions">
+          <a href="#contacto" class="btn btn-solid">Agendar consulta <span aria-hidden="true">→</span></a>
+          <a href="tel:+351252001291" class="btn btn-ghost">Ligar 252 001 291</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══════════════ CONTACTO ═══════════════ -->
   <section id="contacto" class="contacto-sec">
     <div class="wrap">
@@ -1066,6 +1161,10 @@ Toda a informação é tratada com total confidencialidade.</p>
         <div class="contact-info-card reveal">
           <span class="eyebrow">Escritório</span>
           <h3>Póvoa de Varzim.</h3>
+          <div class="contact-quick">
+            <a href="tel:+351252001291" class="btn btn-solid">Ligar agora</a>
+            <a href="mailto:gabrielapereira-11105p@adv.oa.pt" class="btn btn-ghost">Enviar e-mail</a>
+          </div>
           <div class="info-rows">
             <div class="info-row">
               <div class="lbl">E-mail</div>
@@ -1422,6 +1521,30 @@ Toda a informação é tratada com total confidencialidade.</p>
     }, { threshold: 0.6 });
     counter.observe(credVal);
   }
+
+  // ── Extra CTAs ───────────────────────────────────────────
+  (function() {
+    document.querySelectorAll('.area-cta').forEach(a => a.addEventListener('click', () => {
+      const opt = document.querySelector('.cs-option[data-value="' + a.dataset.area + '"]');
+      if (opt) opt.click();
+    }));
+    const bar = document.getElementById('sticky-cta');
+    const hero = document.querySelector('.hero');
+    const contacto = document.getElementById('contacto');
+    function upd() {
+      const y = window.scrollY, h = window.innerHeight;
+      const pastHero = hero.getBoundingClientRect().bottom < 0;
+      const cr = contacto.getBoundingClientRect();
+      const inContact = cr.top < h * 0.6 && cr.bottom > 0;
+      const show = pastHero && !inContact;
+      bar.classList.toggle('show', show);
+      bar.setAttribute('aria-hidden', !show);
+      bar.querySelectorAll('a').forEach(a => a.tabIndex = show ? 0 : -1);
+    }
+    window.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd);
+    upd();
+  })();
 
   // ── Custom select dropdown ────────────────────────────────
   (function() {
