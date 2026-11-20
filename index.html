@@ -1323,13 +1323,13 @@ Toda a informação é tratada com total confidencialidade.</p>
     const mensagem = form.mensagem.value.trim();
 
     const destinatario = 'gabrielapereira-11105p@adv.oa.pt';
-    const assunto = 'Pedido de consulta — ' + (area || 'Website');
+    const assunto = area || 'Pedido de consulta';
     const corpo =
+      (mensagem || '—') + '\n\n' +
+      '—\n' +
       'Nome: ' + nome + '\n' +
       'Telemóvel: ' + (telemovel || '—') + '\n' +
-      'E-mail: ' + email + '\n' +
-      'Área: ' + (area || '—') + '\n\n' +
-      'Mensagem:\n' + (mensagem || '—');
+      'E-mail: ' + email;
 
     const mailtoLink = 'mailto:' + destinatario +
       '?subject=' + encodeURIComponent(assunto) +
