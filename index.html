@@ -699,7 +699,10 @@
     .hero { padding: 72px 0 60px; }
     .hero-grid { grid-template-columns: 1fr; gap: 40px; }
     .hero-col { order: -1; max-width: 360px; margin: 0 auto; }
-    .cred-card { left: 0; }
+    .cred-card {
+      position: static; left: auto; bottom: auto;
+      max-width: none; width: 100%; margin: 20px auto 0;
+    }
 
     /* Areas */
     .areas-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -745,7 +748,7 @@
     .hero-cta { flex-direction: column; gap: 10px; }
     .hero-cta .btn { width: 100%; justify-content: center; }
     .hero-col { max-width: 280px; }
-    .cred-card { padding: 14px 18px; max-width: 200px; }
+    .cred-card { padding: 14px 18px; max-width: none; }
     .cred-card .c-val { font-size: 20px; }
     .cred-card .c-sub { font-size: 11px; }
     .scroll-hint { display: none; }
