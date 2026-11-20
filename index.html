@@ -981,9 +981,9 @@ Toda a informação é tratada com total confidencialidade.</p>
         </div>
         <div class="reveal">
           <form id="contact-form" onsubmit="handleSubmit(event)">
-            <div class="f-field"><label>Nome *</label><input type="text" placeholder="O seu nome completo" required=""></div>
-            <div class="f-field"><label>TELEMÓVEL *</label><input type="tel" placeholder="912 000 000"></div>
-            <div class="f-field full"><label>E-mail *</label><input type="email" placeholder="o.seu@email.pt" required=""></div>
+            <div class="f-field"><label>Nome *</label><input type="text" name="nome" placeholder="O seu nome completo" required=""></div>
+            <div class="f-field"><label>TELEMÓVEL *</label><input type="tel" name="telemovel" placeholder="912 000 000"></div>
+            <div class="f-field full"><label>E-mail *</label><input type="email" name="email" placeholder="o.seu@email.pt" required=""></div>
             <div class="f-field full"><label>Área *</label>
               <div class="cs-wrapper" id="cs-area">
                 <div class="cs-display" tabindex="0" role="combobox" aria-expanded="false" aria-haspopup="listbox">Selecione uma área…</div>
@@ -997,10 +997,10 @@ Toda a informação é tratada com total confidencialidade.</p>
                 <input type="hidden" name="area" id="cs-area-val" required="">
               </div>
             </div>
-            <div class="f-field full"><label>Mensagem</label><textarea placeholder="Descreva brevemente a sua situação ou dúvida…"></textarea></div>
+            <div class="f-field full"><label>Mensagem</label><textarea name="mensagem" placeholder="Descreva brevemente a sua situação ou dúvida…"></textarea></div>
             <label class="consent"><input type="checkbox" required=""> Autorizo o tratamento dos meus dados pessoais para efeitos de contacto, nos termos do Regulamento Geral sobre a Proteção de Dados (RGPD).</label>
             <div class="f-submit"><button type="submit">Enviar pedido de consulta</button></div>
-            <p class="form-ok" id="form-ok">✓ Mensagem recebida. Entrarei em contacto com a maior brevidade possível.</p>
+            <p class="form-ok" id="form-ok">✓ O seu cliente de e-mail vai abrir com a mensagem pronta — confirme o envio aí.</p>
           </form>
         </div>
       </div>
@@ -1312,13 +1312,35 @@ Toda a informação é tratada com total confidencialidade.</p>
     });
   })();
 
-  // Form submit
+  // Form submit — abre o cliente de e-mail com os dados preenchidos
   function handleSubmit(e) {
     e.preventDefault();
-    e.target.reset();
+    const form = e.target;
+    const nome = form.nome.value.trim();
+    const telemovel = form.telemovel.value.trim();
+    const email = form.email.value.trim();
+    const area = document.getElementById('cs-area-val').value;
+    const mensagem = form.mensagem.value.trim();
+
+    const destinatario = 'gabrielapereira-11105p@adv.oa.pt';
+    const assunto = 'Pedido de consulta — ' + (area || 'Website');
+    const corpo =
+      'Nome: ' + nome + '\n' +
+      'Telemóvel: ' + (telemovel || '—') + '\n' +
+      'E-mail: ' + email + '\n' +
+      'Área: ' + (area || '—') + '\n\n' +
+      'Mensagem:\n' + (mensagem || '—');
+
+    const mailtoLink = 'mailto:' + destinatario +
+      '?subject=' + encodeURIComponent(assunto) +
+      '&body=' + encodeURIComponent(corpo);
+
+    window.location.href = mailtoLink;
+
     const ok = document.getElementById('form-ok');
     ok.style.display = 'block';
     setTimeout(() => { ok.style.display = 'none'; }, 8000);
+    form.reset();
   }
 </script>
 
