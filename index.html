@@ -39,7 +39,22 @@
     text-rendering: optimizeLegibility;
   }
   a { color: inherit; text-decoration: none; }
-  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 52px; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 52px; position: relative; z-index: 1; }
+
+  /* ─── Ambient drifting glow (hero / processo / contacto) ───── */
+  @keyframes drift-glow {
+    0%, 100% { transform: translate(-6%, -4%) scale(1); opacity: .55; }
+    50%      { transform: translate(6%, 4%) scale(1.15); opacity: .85; }
+  }
+  .hero::before, .processo-sec::before, .contacto-sec::before {
+    content: ""; position: absolute; z-index: 0; pointer-events: none;
+    top: -20%; left: -10%; width: 60%; height: 70%;
+    background: radial-gradient(circle, rgba(201,163,107,.14) 0%, transparent 70%);
+    animation: drift-glow 26s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+  .processo-sec::before { animation-duration: 32s; background: radial-gradient(circle, rgba(200,162,166,.1) 0%, transparent 70%); }
+  .contacto-sec::before { animation-duration: 38s; top: auto; bottom: -20%; left: auto; right: -10%; }
 
   /* ─── Atoms ────────────────────────────────────────────────── */
   .eyebrow {
@@ -80,6 +95,16 @@
     background: color-mix(in srgb, var(--ox3) 82%, transparent);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--ox-line);
+  }
+  .scroll-progress {
+    position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+    z-index: 70; pointer-events: none; background: transparent;
+  }
+  .scroll-progress-bar {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-lt) 50%, var(--gold) 100%);
+    box-shadow: 0 0 8px 0 rgba(201,163,107,.6);
+    transition: width .08s linear;
   }
   .nav-inner {
     display: flex; align-items: center; justify-content: space-between;
@@ -333,12 +358,18 @@
   .valor-desc { font-size: 12px; color: #8A6B6F; line-height: 1.45; position: relative; z-index: 1; transition: color .32s; }
 
   /* ─── Processo ─────────────────────────────────────────────── */
-  .processo-sec { background: var(--ox2); }
+  .processo-sec { background: var(--ox2); position: relative; overflow: hidden; }
   .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); position: relative; }
-  .steps-grid::before {
-    content: ""; position: absolute; top: 20px; left: 12%; right: 12%;
-    height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  .steps-line {
+    position: absolute; top: 0; left: 0; width: 100%; height: 42px;
+    pointer-events: none; z-index: 0; overflow: visible;
   }
+  .steps-line line {
+    stroke: var(--gold); stroke-width: 1.5; stroke-linecap: round;
+    stroke-dasharray: 100; stroke-dashoffset: 100;
+    transition: stroke-dashoffset 1.6s cubic-bezier(.22,.61,.36,1);
+  }
+  .steps-grid.draw .steps-line line { stroke-dashoffset: 0; }
   .step { padding: 0 28px 0 0; }
   .step .step-num {
     width: 42px; height: 42px; border: 1px solid var(--gold);
@@ -354,7 +385,7 @@
   .step p { font-size: 14.5px; color: rgba(244,237,230,.65); line-height: 1.68; }
 
   /* ─── Contacto ─────────────────────────────────────────────── */
-  .contacto-sec { background: var(--ox3); }
+  .contacto-sec { background: var(--ox3); position: relative; overflow: hidden; }
   .contact-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 80px; }
   .contact-info-card { border: 1px solid var(--ox-line); padding: 44px 38px; height: fit-content; }
   .contact-info-card h3 {
@@ -416,18 +447,33 @@
   .f-field label {
     display: block; font-size: 10px; letter-spacing: .16em;
     text-transform: uppercase; color: var(--rose-dim); margin-bottom: 9px;
+    transition: color .3s ease, transform .3s ease;
+  }
+  .f-field:focus-within label { color: var(--gold-lt); transform: translateX(3px); }
+  .f-field {
+    position: relative;
   }
   .f-field input,
   .f-field textarea {
     width: 100%; background: var(--ox2); color: var(--paper);
     border: 1px solid var(--ox-line); padding: 14px 16px;
     font-family: var(--sans); font-size: 15px; font-weight: 300;
-    transition: border-color .25s;
+    transition: border-color .3s ease, box-shadow .3s ease;
     -webkit-appearance: none; appearance: none;
   }
   .f-field input:focus,
   .f-field select:focus,
-  .f-field textarea:focus { outline: none; border-color: var(--gold); }
+  .f-field textarea:focus {
+    outline: none; border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,163,107,.14), 0 0 14px -2px rgba(201,163,107,.35);
+  }
+  .f-field::after {
+    content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 0;
+    background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+    transition: width .35s cubic-bezier(.22,.61,.36,1);
+    pointer-events: none;
+  }
+  .f-field:focus-within::after { width: 100%; }
   .f-field input::placeholder,
   .f-field textarea::placeholder { color: rgba(244,237,230,.32); }
   .f-field select option { background: #4A2830; color: var(--paper); }
@@ -644,7 +690,7 @@
 
     /* Processo */
     .steps-grid { grid-template-columns: 1fr 1fr; gap: 44px; }
-    .steps-grid::before { display: none; }
+    .steps-line { display: none; }
 
     /* Contacto */
     .contact-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -723,6 +769,7 @@
 </head><body>
 
 <!-- ═══════════════ NAV ═══════════════ -->
+<div class="scroll-progress"><div class="scroll-progress-bar" id="scroll-progress-bar"></div></div>
 <header class="nav">
   <div class="wrap nav-inner">
     <a href="#top" class="brand">
@@ -923,6 +970,9 @@ desde março de 2005</div>
 Estes são os quatro momentos do nosso trabalho conjunto.</p>
       </div>
       <div class="steps-grid reveal">
+        <svg class="steps-line" viewBox="0 0 1000 42" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="120" y1="21" x2="880" y2="21" pathLength="100"></line>
+        </svg>
         <div class="step">
           <div class="step-num">1</div>
           <h4>Primeiro contacto</h4>
@@ -1088,7 +1138,13 @@ Toda a informação é tratada com total confidencialidade.</p>
   document.body.classList.add('js-ready');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        if (e.target.classList.contains('steps-grid')) {
+          setTimeout(() => e.target.classList.add('draw'), 250);
+        }
+        io.unobserve(e.target);
+      }
     });
   }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
@@ -1183,20 +1239,25 @@ Toda a informação é tratada com total confidencialidade.</p>
     window.addEventListener('resize', () => { resize(); });
   })();
 
-  // ── 3D tilt on area cards ─────────────────────────────────
-  document.querySelectorAll('.area-card').forEach(card => {
-    card.addEventListener('mousemove', function(e) {
-      const r = card.getBoundingClientRect();
+  // ── 3D tilt (area cards, sobre photo, cred card) ──────────
+  function applyTilt(el, { strength = 7, lift = -6 } = {}) {
+    if (!el) return;
+    el.addEventListener('mousemove', function(e) {
+      const r = el.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width  - 0.5;
       const y = (e.clientY - r.top)  / r.height - 0.5;
-      card.style.transition = 'transform .08s ease, border-color .3s';
-      card.style.transform = 'translateY(-6px) perspective(700px) rotateX(' + (-y * 7) + 'deg) rotateY(' + (x * 7) + 'deg)';
+      el.style.transition = 'transform .08s ease, border-color .3s';
+      el.style.transform = 'translateY(' + lift + 'px) perspective(700px) rotateX(' + (-y * strength) + 'deg) rotateY(' + (x * strength) + 'deg)';
     });
-    card.addEventListener('mouseleave', function() {
-      card.style.transition = 'transform .55s cubic-bezier(.23,1,.32,1), border-color .3s';
-      card.style.transform  = '';
+    el.addEventListener('mouseleave', function() {
+      el.style.transition = 'transform .55s cubic-bezier(.23,1,.32,1), border-color .3s';
+      el.style.transform  = '';
     });
-  });
+  }
+
+  document.querySelectorAll('.area-card').forEach(card => applyTilt(card));
+  applyTilt(document.querySelector('.sobre-photo .ph'), { strength: 5, lift: -3 });
+  applyTilt(document.querySelector('.cred-card'), { strength: 6, lift: 0 });
 
   // ── Magnetic buttons ──────────────────────────────────────
   document.querySelectorAll('.btn').forEach(btn => {
@@ -1221,6 +1282,27 @@ Toda a informação é tratada com total confidencialidade.</p>
     window.addEventListener('scroll', function() {
       const sy = window.scrollY;
       heroCol.style.transform = 'translateY(' + (sy * 0.09) + 'px)';
+    }, { passive: true });
+  }
+
+  // ── Parallax sobre photo ──────────────────────────────────
+  const sobrePhoto = document.querySelector('.sobre-photo');
+  if (sobrePhoto) {
+    window.addEventListener('scroll', function() {
+      const r = sobrePhoto.getBoundingClientRect();
+      const center = r.top + r.height / 2 - window.innerHeight / 2;
+      sobrePhoto.style.transform = 'translateY(' + (center * -0.06) + 'px)';
+    }, { passive: true });
+  }
+
+  // ── Scroll progress bar ───────────────────────────────────
+  const progressBar = document.getElementById('scroll-progress-bar');
+  if (progressBar) {
+    window.addEventListener('scroll', function() {
+      const h = document.documentElement;
+      const scrollable = h.scrollHeight - h.clientHeight;
+      const pct = scrollable > 0 ? (h.scrollTop / scrollable) * 100 : 0;
+      progressBar.style.width = pct + '%';
     }, { passive: true });
   }
 
